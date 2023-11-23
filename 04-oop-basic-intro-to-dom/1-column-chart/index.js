@@ -15,9 +15,10 @@ export default class ColumnChart {
     createTemplate(){
         return `
             <div class="column-chart__title">
+                Total ${this.label}
             </div>
             <div class="column-chart__container">
-                <div data-element="header" class="column-chart__header"></div>
+                <div data-element="header" class="column-chart__header">${this.formatHeading(this.value)}</div>
                 <div data-element="body" class="column-chart__chart">
                 </div>
             </div>`;
@@ -33,11 +34,8 @@ export default class ColumnChart {
 
     initialization = (data) =>{
         const chartTitleElement = this.element.querySelector('.column-chart__title');
-        const dataTitleElement = this.element.querySelector('[data-element="header"]');
 
-        this.setChartTitle(this.label, chartTitleElement);
         this.createLinkElement(this.link, chartTitleElement);
-        this.setDataTitle(this.value, dataTitleElement, this.formatHeading);
 
         this.update(data);
     }
@@ -46,7 +44,7 @@ export default class ColumnChart {
         const dataChartsElement = this.element.querySelector('[data-element="body"]');
 
         if(data.length){
-            this.createChartsElemnts(data, dataChartsElement, this.chartHeight);
+            this.addChartsElemnts(data, dataChartsElement, this.chartHeight);
         }
         else{
             this.setLoading();
@@ -55,14 +53,6 @@ export default class ColumnChart {
 
     setLoading = () =>{
         this.element.classList.add('column-chart_loading')
-    }
-
-    setChartTitle(title, parentElem){
-        parentElem.append('Total ' + title);
-    }
-
-    setDataTitle(val, parentElem, format){
-        parentElem.innerHTML = format(val);
     }
 
     createLinkElement(url, parentElem){
@@ -76,9 +66,9 @@ export default class ColumnChart {
         }
     }
 
-    createChartsElemnts(data, parentElem, chartHeight){
+    addChartsElemnts = (data, parentElem) => {
         const maxVal = Math.max(...data);
-        const heightScale = chartHeight / maxVal;
+        const heightScale = this.chartHeight / maxVal;
 
         data.forEach(item => {
             const chart = document.createElement('div');
