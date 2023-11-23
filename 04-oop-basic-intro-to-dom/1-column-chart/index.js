@@ -1,5 +1,5 @@
 export default class ColumnChart {
-    constructor({data = [], label, value = 0, link = '', formatHeading = data => data} = {}){
+    constructor({data = [], label = '', value = 0, link = '', formatHeading = data => data} = {}){
         this.data = data;
         this.label = label;
         this.value = value;
@@ -8,14 +8,15 @@ export default class ColumnChart {
 
         this.chartHeight = 50;
 
-        this.createElement();
-        this.initialization(this.data);
+        this.element = this.createElement();
+        this.update(this.data);
     }
 
     createTemplate(){
         return `
             <div class="column-chart__title">
                 Total ${this.label}
+                ${this.createLinkTemplate(this.link)}
             </div>
             <div class="column-chart__container">
                 <div data-element="header" class="column-chart__header">${this.formatHeading(this.value)}</div>
@@ -25,23 +26,18 @@ export default class ColumnChart {
     }
 
     createElement = () => {
-        this.element = document.createElement('DIV');
-        this.element.classList.add('column-chart');
-        this.element.setAttribute('style', '--chart-height = 50');
+        const element = document.createElement('DIV');
+        element.classList.add('column-chart');
+        element.setAttribute('style', '--chart-height = 50');
 
-        this.element.innerHTML = this.createTemplate();
-    }
+        element.innerHTML = this.createTemplate();
 
-    initialization = (data) =>{
-        const chartTitleElement = this.element.querySelector('.column-chart__title');
-
-        this.createLinkElement(this.link, chartTitleElement);
-
-        this.update(data);
+        return element;
     }
 
     update = (data) =>{
         const dataChartsElement = this.element.querySelector('[data-element="body"]');
+        dataChartsElement.innerHTML = '';
 
         if(data.length){
             this.addChartsElemnts(data, dataChartsElement, this.chartHeight);
@@ -55,15 +51,12 @@ export default class ColumnChart {
         this.element.classList.add('column-chart_loading')
     }
 
-    createLinkElement(url, parentElem){
+    createLinkTemplate(url){
         if(url){
-            const linkElement = document.createElement('A');
-            linkElement.classList.add('column-chart__link');
-            linkElement.innerHTML = 'View all';
-            linkElement.setAttribute('href', url);
-
-            parentElem.append(linkElement);
+            return `<a href = ${url} class="column-chart__link">View all</a>`;
         }
+
+        return '';
     }
 
     addChartsElemnts = (data, parentElem) => {
