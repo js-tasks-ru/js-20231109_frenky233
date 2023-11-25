@@ -106,11 +106,9 @@ export default class SortableTable {
     headerElement.dataset.order = param;
 
     if(sortingType == 'string'){
-      console.log(11);
       this.data.sort((a, b) => sortingDir * a[sortBy].localeCompare(b[sortBy], ['ru', 'en'], {caseFirst: "upper"}));
     }
     else if(sortingType == 'number'){
-      console.log(22);
       this.data.sort((a, b) => sortingDir * a[sortBy] - b[sortBy]);
     }
 
