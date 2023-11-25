@@ -109,7 +109,7 @@ export default class SortableTable {
       this.data.sort((a, b) => sortingDir * a[sortBy].localeCompare(b[sortBy], ['ru', 'en'], {caseFirst: "upper"}));
     }
     else if(sortingType == 'number'){
-      this.data.sort((a, b) => sortingDir * a[sortBy] - b[sortBy]);
+      this.data.sort((a, b) => sortingDir * (a[sortBy] - b[sortBy]));
     }
 
     this.renderBodyItemsElements(this.data, bodyElement);
