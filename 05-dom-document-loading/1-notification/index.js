@@ -21,25 +21,25 @@ export default class NotificationMessage {
     }
 
     createElement(){
-        const elem = document.createElement('div');
-        elem.classList.add('notification');
+        const element = document.createElement('div');
+        element.classList.add('notification');
         if(this.type) {
-            elem.classList.add(this.type);
+            element.classList.add(this.type);
         }
-        elem.setAttribute('style', `--value:${this.duration / 1000}s`);
-        elem.innerHTML = this.createTemplate();
+        element.setAttribute('style', `--value:${this.duration / 1000}s`);
+        element.innerHTML = this.createTemplate();
 
-        return elem;
+        return element;
     }
 
-    show = (target = document.body) =>{
+    show(target = document.body){
         if(NotificationMessage.onScreenElement){
             NotificationMessage.onScreenElement.destroy();
         }
         NotificationMessage.onScreenElement = this;
         
         target.append(this.element);
-        setTimeout(this.destroy, this.duration);
+        setTimeout(this.remove, this.duration);
     }
 
     remove = () =>{

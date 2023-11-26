@@ -1,12 +1,11 @@
 export default class SortableTable {
-  static sortingTitleElement = null;
-  
-  constructor(headerConfig = [], data = []) {
+constructor(headerConfig = [], data = []) {
     this.headerConfig = headerConfig;
     this.data = data;
 
     this.templates = this.getTemplates(headerConfig);
     this.sortingTypes = this.getSortingTypes(headerConfig);
+    this.prevSortedTitleElement = null;
 
     this.element = this.createTableElement();
     this.subElements = {body: this.element.querySelector('[data-element="body"'), header: this.element.querySelector('[data-element="header"]')};
@@ -81,11 +80,31 @@ export default class SortableTable {
     return elem;
   }
 
-  addArrowSymbolElement(target){
-    target.insertAdjacentHTML('beforeend',
-      `<span data-element="arrow" class="sortable-table__sort-arrow">
+  createArrowSymbolTemplate(){
+      return `<span data-element="arrow" class="sortable-table__sort-arrow">
           <span class="sort-arrow"></span>
-      </span>`);
+      </span>`;
+  }
+
+  addArrowSymbolElement(target){
+    if(target.children.length < 2){
+      target.insertAdjacentHTML('beforeend', this.createArrowSymbolTemplate());
+      
+      if(this.prevSortedTitleElement && this.prevSortedTitleElement != target){
+        this.prevSortedTitleElement.querySelector('[data-element="arrow"]').remove();
+      }
+      
+      this.prevSortedTitleElement = target;
+    }
+  }
+
+  sortByType(sortBy, sortingType, sortingDir){
+    if(sortingType == 'string'){
+      this.data.sort((a, b) => sortingDir * a[sortBy].localeCompare(b[sortBy], ['ru', 'en'], {caseFirst: "upper"}));
+    }
+    else if(sortingType == 'number'){
+      this.data.sort((a, b) => sortingDir * (a[sortBy] - b[sortBy]));
+    }
   }
 
   sort = (sortBy, param) =>{
@@ -94,24 +113,10 @@ export default class SortableTable {
     const headerElement = this.element.querySelector(`[data-id="${sortBy}"]`);
     const sortingType = this.sortingTypes.find(({id}) => id == sortBy).sortType;
 
-    if(SortableTable.sortingTitleElement == headerElement){
-      headerElement.querySelector('[data-element="arrow"]').remove();
-    }else if(SortableTable.sortingTitleElement){
-      SortableTable.sortingTitleElement.querySelector('[data-element="arrow"]').remove();
-    }
-
-    SortableTable.sortingTitleElement = headerElement;
-    this.addArrowSymbolElement(headerElement);
-
     headerElement.dataset.order = param;
 
-    if(sortingType == 'string'){
-      this.data.sort((a, b) => sortingDir * a[sortBy].localeCompare(b[sortBy], ['ru', 'en'], {caseFirst: "upper"}));
-    }
-    else if(sortingType == 'number'){
-      this.data.sort((a, b) => sortingDir * (a[sortBy] - b[sortBy]));
-    }
-
+    this.sortByType(sortBy, sortingType, sortingDir)
+    this.addArrowSymbolElement(headerElement);
     this.renderBodyItemsElements(this.data, bodyElement);
   }
 
