@@ -5,7 +5,7 @@ constructor(headerConfig = [], data = []) {
 
     this.templates = this.getTemplates(headerConfig);
     this.sortingTypes = this.getSortingTypes(headerConfig);
-    this.prevSortedTitleElement = null;
+    this.prevSortedHeaderElement = null;
 
     this.element = this.createTableElement();
     this.subElements = {body: this.element.querySelector('[data-element="body"'), header: this.element.querySelector('[data-element="header"]')};
@@ -90,12 +90,21 @@ constructor(headerConfig = [], data = []) {
     if(target.children.length < 2){
       target.insertAdjacentHTML('beforeend', this.createArrowSymbolTemplate());
       
-      if(this.prevSortedTitleElement && this.prevSortedTitleElement != target){
-        this.prevSortedTitleElement.querySelector('[data-element="arrow"]').remove();
+      if(this.prevSortedHeaderElement && this.prevSortedHeaderElement != target){
+        this.prevSortedHeaderElement.querySelector('[data-element="arrow"]').remove();
       }
-      
-      this.prevSortedTitleElement = target;
     }
+  }
+
+  updateHeaderElement(headerElement, param){
+    this.addArrowSymbolElement(headerElement);
+
+    if(this.prevSortedHeaderElement){
+      this.prevSortedHeaderElement.removeAttribute('data-order');
+    }
+    headerElement.dataset.order = param;
+
+    this.prevSortedHeaderElement = headerElement;
   }
 
   sortByType(sortBy, sortingType, sortingDir){
@@ -113,10 +122,8 @@ constructor(headerConfig = [], data = []) {
     const headerElement = this.element.querySelector(`[data-id="${sortBy}"]`);
     const sortingType = this.sortingTypes.find(({id}) => id == sortBy).sortType;
 
-    headerElement.dataset.order = param;
-
     this.sortByType(sortBy, sortingType, sortingDir)
-    this.addArrowSymbolElement(headerElement);
+    this.updateHeaderElement(headerElement, param);
     this.renderBodyItemsElements(this.data, bodyElement);
   }
 

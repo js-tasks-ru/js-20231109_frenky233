@@ -39,7 +39,7 @@ export default class NotificationMessage {
         NotificationMessage.onScreenElement = this;
         
         target.append(this.element);
-        setTimeout(this.remove, this.duration);
+        this.timerID = setTimeout(this.destroy, this.duration);
     }
 
     remove = () =>{
@@ -47,6 +47,8 @@ export default class NotificationMessage {
     }
 
     destroy = () =>{
+        clearTimeout(this.timerID);
+
         this.remove();
         if(NotificationMessage.onScreenElement == this)
         {
