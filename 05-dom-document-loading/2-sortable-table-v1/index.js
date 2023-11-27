@@ -41,7 +41,7 @@ constructor(headerConfig = [], data = []) {
     return `<div class="sortable-table__cell">${value}</div>`;
   }
 
-  createBodyItemTemplate(data = {}){
+  createBodyItemElement(data = {}){
     const itemElement = document.createElement('a');
     itemElement.href = `/products/${data.id}`;
     itemElement.classList.add('sortable-table__row');
@@ -63,7 +63,7 @@ constructor(headerConfig = [], data = []) {
 
   renderBodyItemsElements(data = [], bodyElement){
     bodyElement.innerHTML = '';
-    data.forEach(dataItem => bodyElement.insertAdjacentHTML('beforeend', this.createBodyItemTemplate(dataItem)));
+    data.forEach(dataItem => bodyElement.insertAdjacentHTML('beforeend', this.createBodyItemElement(dataItem)));
   }
 
   createTableElement(){
