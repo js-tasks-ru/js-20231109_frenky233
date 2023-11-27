@@ -32,13 +32,13 @@ export default class NotificationMessage {
         return element;
     }
 
-    show(target = document.body){
+    show(targetElement = document.body){
         if(NotificationMessage.onScreenElement){
             NotificationMessage.onScreenElement.destroy();
         }
         NotificationMessage.onScreenElement = this;
         
-        target.append(this.element);
+        targetElement.append(this.element);
         this.timerID = setTimeout(this.destroy, this.duration);
     }
 

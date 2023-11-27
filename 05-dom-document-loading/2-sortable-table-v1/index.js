@@ -28,13 +28,13 @@ constructor(headerConfig = [], data = []) {
   }
 
   createHeaderElement(){
-    const header = document.createElement('div');
-    header.classList.add('sortable-table__header', 'sortable-table__row');
-    header.dataset.element = 'header';
+    const headerElement = document.createElement('div');
+    headerElement.classList.add('sortable-table__header', 'sortable-table__row');
+    headerElement.dataset.element = 'header';
 
-    this.headerConfig.forEach(({id, title, sortable}) => header.insertAdjacentHTML('beforeend', this.createHeaderItemTemplate(id, title, sortable)));
+    this.headerConfig.forEach(({id, title, sortable}) => headerElement.insertAdjacentHTML('beforeend', this.createHeaderItemTemplate(id, title, sortable)));
 
-    return header.outerHTML;
+    return headerElement.outerHTML;
   }
 
   createCellTemplate(value = ''){
@@ -42,42 +42,42 @@ constructor(headerConfig = [], data = []) {
   }
 
   createBodyItemTemplate(data = {}){
-    const item = document.createElement('a');
-    item.href = `/products/${data.id}`;
-    item.classList.add('sortable-table__row');
+    const itemElement = document.createElement('a');
+    itemElement.href = `/products/${data.id}`;
+    itemElement.classList.add('sortable-table__row');
 
-    this.templates.forEach(({id, template}) => item.insertAdjacentHTML('beforeend',template(data[id])));
+    this.templates.forEach(({id, template}) => itemElement.insertAdjacentHTML('beforeend',template(data[id])));
 
-    return item.outerHTML;
+    return itemElement.outerHTML;
   }
 
   createBodyElement(){
-    const body = document.createElement('div');
-    body.classList.add('sortable-table__body');
-    body.dataset.element = 'body';
+    const bodyElement = document.createElement('div');
+    bodyElement.classList.add('sortable-table__body');
+    bodyElement.dataset.element = 'body';
 
-    this.renderBodyItemsElements(this.data, body);
+    this.renderBodyItemsElements(this.data, bodyElement);
 
-    return body.outerHTML;
+    return bodyElement.outerHTML;
   }
 
-  renderBodyItemsElements(data = [], body){
-    body.innerHTML = '';
-    data.forEach(item => body.insertAdjacentHTML('beforeend', this.createBodyItemTemplate(item)));
+  renderBodyItemsElements(data = [], bodyElement){
+    bodyElement.innerHTML = '';
+    data.forEach(dataItem => bodyElement.insertAdjacentHTML('beforeend', this.createBodyItemTemplate(dataItem)));
   }
 
   createTableElement(){
-    const elem = document.createElement('div');
-    elem.classList.add('products-list__container');
-    elem.dataset.element = 'productsContainer';
+    const element = document.createElement('div');
+    element.classList.add('products-list__container');
+    element.dataset.element = 'productsContainer';
 
-    elem.insertAdjacentHTML('beforeend', 
+    element.insertAdjacentHTML('beforeend', 
     `<div class="sortable-table">
       ${this.createHeaderElement()} 
       ${this.createBodyElement()}
     </div>`);
 
-    return elem;
+    return element;
   }
 
   createArrowSymbolTemplate(){
@@ -86,11 +86,11 @@ constructor(headerConfig = [], data = []) {
       </span>`;
   }
 
-  addArrowSymbolElement(target){
-    if(target.children.length < 2){
-      target.insertAdjacentHTML('beforeend', this.createArrowSymbolTemplate());
+  addArrowSymbolElement(targetElement){
+    if(targetElement.children.length < 2){
+      targetElement.insertAdjacentHTML('beforeend', this.createArrowSymbolTemplate());
       
-      if(this.prevSortedHeaderElement && this.prevSortedHeaderElement != target){
+      if(this.prevSortedHeaderElement && this.prevSortedHeaderElement != targetElement){
         this.prevSortedHeaderElement.querySelector('[data-element="arrow"]').remove();
       }
     }
