@@ -1,4 +1,4 @@
-export default class SortableTable {
+export default class SortableTableV1 {
 constructor(headerConfig = [], data = []) {
     this.headerConfig = headerConfig;
     this.data = data;
@@ -116,7 +116,7 @@ constructor(headerConfig = [], data = []) {
     }
   }
 
-  sort = (sortBy, param) =>{
+  sort(sortBy, param){
     const sortingDir = param == 'asc' ? 1 : -1;
     const bodyElement = this.element.querySelector('[data-element="body"]');
     const headerElement = this.element.querySelector(`[data-id="${sortBy}"]`);
