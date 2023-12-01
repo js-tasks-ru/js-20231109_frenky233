@@ -5,7 +5,7 @@ export default class DoubleSlider {
         this.formatValue = formatValue;
         this.selected = selected;
 
-        document.addEventListener('pointerdown', this.onPointerDown);
+        this.addDocumentEventListeners();
 
         this.element = this.createElement();
         this.element.ondragstart = () => false;
@@ -41,14 +41,22 @@ export default class DoubleSlider {
         return element.firstElementChild;
     }
 
-    addEventListeners = () =>{
+    addSlidersEventListeners = () =>{
         document.addEventListener('pointermove', this.onPointerMove);
         document.addEventListener('pointerup', this.onPointerUp);
     }
 
-    removeEventListeners = () =>{
+    addDocumentEventListeners = () =>{
+        document.addEventListener('pointerdown', this.onPointerDown);
+    }
+
+    removeSlidersEventListeners = () =>{
         document.removeEventListener('pointermove', this.onPointerMove);
         document.removeEventListener('pointerup', this.onPointerUp);
+    }
+
+    removeDocumentEventListeners = () =>{
+        document.removeEventListener('pointerdown', this.onPointerDown);
     }
 
     onPointerDown = (event) =>{
@@ -57,17 +65,17 @@ export default class DoubleSlider {
         if(targetElement){
             if(targetElement.classList.contains('range-slider__thumb-left')){
                 this.thumbDir = 'left';
-                this.addEventListeners();
+                this.addSlidersEventListeners();
             }
             else if(targetElement.classList.contains('range-slider__thumb-right')){
                 this.thumbDir = 'right';
-                this.addEventListeners();
+                this.addSlidersEventListeners();
             }
         }
     }
 
     onPointerUp = () =>{
-        this.removeEventListeners();
+        this.removeSlidersEventListeners();
         this.generateEvent(this.selected);
     }
 
@@ -148,7 +156,7 @@ export default class DoubleSlider {
 
     destroy = () =>{
         this.element.remove();
-        this.removeEventListeners();
-        document.removeEventListener('pointerdown', this.onPointerDown);
+        this.removeSlidersEventListeners();
+        this.removeDocumentEventListeners();
     }
 }
