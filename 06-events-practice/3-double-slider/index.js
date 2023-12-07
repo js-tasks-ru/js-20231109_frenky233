@@ -89,8 +89,8 @@ export default class DoubleSlider {
         const event = new CustomEvent('range-select', {
             bubbles: true,
             detail: {
-                from: from,
-                to: to
+                from: Math.round(from),
+                to: Math.round(to)
             }
         });
 
@@ -125,16 +125,16 @@ export default class DoubleSlider {
     }
 
     calcSliderValueFromShift = (shift) =>{
-        return Math.round(shift / 100 * (this.max - this.min) + this.min);
+        return shift / 100 * (this.max - this.min) + this.min;
     }
 
     changeSliderValue = (value, postition) =>{
         switch (postition){
             case 'left':
-                this.leftValueElement.textContent = this.formatValue(value);
+                this.leftValueElement.textContent = this.formatValue(Math.round(value));
                 break;
             case 'right':
-                this.rightValueElement.textContent = this.formatValue(value);
+                this.rightValueElement.textContent = this.formatValue(Math.round(value));
                 break;
         }
     }
@@ -145,13 +145,7 @@ export default class DoubleSlider {
     }
     
     validateShift(value, min, max){
-        if(value > max){
-            return max;
-        }
-        if(value < min){
-            return min;
-        }
-        return value;
+        return Math.min(max, Math.max(min, value));;
     }
 
     destroy = () =>{

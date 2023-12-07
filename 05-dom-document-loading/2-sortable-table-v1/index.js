@@ -62,7 +62,6 @@ constructor(headerConfig = [], data = []) {
   }
 
   renderBodyItemsElements(data = [], bodyElement){
-    bodyElement.innerHTML = '';
     data.forEach(dataItem => bodyElement.insertAdjacentHTML('beforeend', this.createBodyItemElement(dataItem)));
   }
 
@@ -124,6 +123,7 @@ constructor(headerConfig = [], data = []) {
 
     this.sortByType(sortBy, sortingType, sortingDir)
     this.updateHeaderElement(headerElement, param);
+    bodyElement.innerHTML = '';
     this.renderBodyItemsElements(this.data, bodyElement);
   }
 
