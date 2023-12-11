@@ -150,8 +150,9 @@ export default class ProductForm {
     this.getFormElements();
 
     if(this.productId){
-      this.productData = await this.getData(this.productId);
-      this.editProductCard(this.productData[0]);
+      const data = await this.getData(this.productId);
+      this.productData = data[0];
+      this.editProductCard(this.productData);
     }
     else{
       this.createProductCard();
@@ -205,23 +206,22 @@ export default class ProductForm {
     return images;
   }
 
-  checkValueType(key, value){
+  checkValueType = (key, value) =>{
     switch(typeof this.productData[key]){
       case 'string':
         return value;
-        break;
       case 'number':
         return +value;
-        break;
     }
   }
 
-  getFormData(){
+  getFormData = () =>{
     const formData = {};
+    
     for(const [key, element] of Object.entries(this.formElements)){
       formData[key] = this.checkValueType(key, element.value);
     }
-    
+
     formData.images = this.getImages();
     formData.id = this.productId;
 
