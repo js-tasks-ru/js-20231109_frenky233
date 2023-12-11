@@ -33,8 +33,8 @@ export default class RangePicker {
         return `
         <div class="rangepicker">
             <div class="rangepicker__input" data-element="input">
-                <span data-element="from">${this.from.toLocaleDateString('default')}</span> -
-                <span data-element="to">${this.to.toLocaleDateString('default')}</span>
+                <span data-element="from">${this.formatDate(this.from)}</span> -
+                <span data-element="to">${this.formatDate(this.to)}</span>
             </div>
             <div class="rangepicker__selector" data-element="selector"></div>
         </div>
@@ -45,7 +45,7 @@ export default class RangePicker {
         return `
         <div class="rangepicker__calendar"'>
             <div class="rangepicker__month-indicator">
-            <time datetime="${date.toLocaleString('en', { month: 'long' })}">${date.toLocaleString('default' , { month: 'long' })}</time>
+            <time datetime="${date.toLocaleString('en', { month: 'long' })}">${date.toLocaleString('ru' , { month: 'long' })}</time>
             </div>
             <div class="rangepicker__day-of-week">
             <div>Пн</div>
@@ -65,12 +65,12 @@ export default class RangePicker {
         let inner = '';
 
         for(let day = 2; day <= this.daysInMonth(date); day++){
-            inner += this.createDateGridItemTempalte(new Date(new Date(date).setDate(day)));
+            inner += this.createDateGridItemTempalte(this.setNewDay(date, day));
         }
         
         return `
         <div class="rangepicker__date-grid">
-        <button type="button" class="rangepicker__cell" style="--start-from: ${this.getFirstDayOfMonth(date)}" data-value="${(new Date(new Date(date).setDate(1)).toJSON())}">1</button>
+        <button type="button" class="rangepicker__cell" style="--start-from: ${this.getFirstDayOfMonth(date)}" data-value="${this.setNewDay(date, 1).toJSON()}">1</button>
             ${inner}
         </div>
         `
@@ -107,11 +107,11 @@ export default class RangePicker {
             this.calendarElementsData = {
                 left: {
                     element: calendarElements.left,
-                    date: new Date(new Date(this.from).setDate(1))
+                    date: this.setNewDay(this.from, 1)
                 },
                 right: {
                     element: calendarElements.right,
-                    date: new Date(new Date(this.to).setDate(1))
+                    date: this.setNewDay(this.to, 1)
                 }
             }
             
@@ -271,8 +271,8 @@ export default class RangePicker {
     }
 
     setTimeInterval(from, to){
-        this.subElements.from.textContent = from.toLocaleDateString('default');
-        this.subElements.to.textContent = to.toLocaleDateString('default');
+        this.subElements.from.textContent = this.formatDate(from);
+        this.subElements.to.textContent = this.formatDate(to);
         
         let outOfBounce = false;
         [from, to, outOfBounce] = this.validateDates(from, to);
@@ -287,7 +287,7 @@ export default class RangePicker {
 
             buttonElementToPaint.classList.add('rangepicker__selected-between');
 
-            date = new Date(new Date(date).setDate(date.getDate() + 1));
+            date = this.setNewDay(date, date.getDate() + 1);
         }
 
         if(from == this.from.toJSON()){
@@ -323,11 +323,19 @@ export default class RangePicker {
     }
 
     getFirstDayOfMonth(date){
-        let day = new Date(new Date(date).setDate(1)).getDay();
+        let day = this.setNewDay(date, 1).getDay();
         
         day = day ? day : 7;
 
         return day; 
+    }
+
+    setNewDay(date, day){
+        return new Date(new Date(date).setDate(day));
+    }
+
+    formatDate(date) {
+        return date.toLocaleString('ru', {dateStyle: 'short'});
     }
 
     remove(){
