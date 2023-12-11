@@ -33,8 +33,8 @@ export default class RangePicker {
         return `
         <div class="rangepicker">
             <div class="rangepicker__input" data-element="input">
-                <span data-element="from">${this.from.toLocaleDateString()}</span> -
-                <span data-element="to">${this.to.toLocaleDateString()}</span>
+                <span data-element="from">${this.from.toLocaleDateString('default')}</span> -
+                <span data-element="to">${this.to.toLocaleDateString('default')}</span>
             </div>
             <div class="rangepicker__selector" data-element="selector"></div>
         </div>
@@ -45,7 +45,7 @@ export default class RangePicker {
         return `
         <div class="rangepicker__calendar"'>
             <div class="rangepicker__month-indicator">
-            <time datetime="${date.toLocaleString('en', { month: 'long' })}">${date.toLocaleString('ru', { month: 'long' })}</time>
+            <time datetime="${date.toLocaleString('en', { month: 'long' })}">${date.toLocaleString('default' , { month: 'long' })}</time>
             </div>
             <div class="rangepicker__day-of-week">
             <div>Пн</div>
@@ -271,8 +271,8 @@ export default class RangePicker {
     }
 
     setTimeInterval(from, to){
-        this.subElements.from.textContent = from.toLocaleDateString();
-        this.subElements.to.textContent = to.toLocaleDateString();
+        this.subElements.from.textContent = from.toLocaleDateString('default');
+        this.subElements.to.textContent = to.toLocaleDateString('default');
         
         let outOfBounce = false;
         [from, to, outOfBounce] = this.validateDates(from, to);
@@ -307,8 +307,8 @@ export default class RangePicker {
           new CustomEvent("date-select", {
             bubbles: true,
             detail: {
-                from: this.from.toJSON(),
-                to: this.to.toJSON()
+                from: this.from,
+                to: this.to
             },
           })
         );
