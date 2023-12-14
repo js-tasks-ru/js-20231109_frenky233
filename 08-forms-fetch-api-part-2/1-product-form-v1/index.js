@@ -108,7 +108,6 @@ export default class ProductForm {
 
   createImageItemTemplate(source, url){
     return `
-    <ul class="sortable-list">
       <li class="products-edit__imagelist-item sortable-list__item" style="">
         <input type="hidden" name="url" value="${url}">
         <input type="hidden" name="source" value="${source}">
@@ -121,7 +120,6 @@ export default class ProductForm {
           <img src="icon-trash.svg" data-delete-handle="" alt="delete">
         </button>
       </li>
-    </ul>
     `;
   }
 
@@ -186,10 +184,12 @@ export default class ProductForm {
   }
 
   addImageItemElement(source, url){
-    this.subElements.imageListContainer.insertAdjacentHTML('beforeend', this.createImageItemTemplate(source, url))
+    this.subElements.imageListContainer.firstElementChild.insertAdjacentHTML('beforeend', this.createImageItemTemplate(source, url));
   }
 
   setImages(images){
+    this.subElements.imageListContainer.insertAdjacentHTML('beforeend', '<ul class="sortable-list"></ul>');
+    
     images.forEach(({source, url}) => {
       this.addImageItemElement(source, url)
     });
@@ -198,11 +198,11 @@ export default class ProductForm {
   getImages(){
     const images = [];
     
-    for(const element of this.subElements.imageListContainer.children){
+    for(const element of this.subElements.imageListContainer.firstElementChild.children){
       const data = element.querySelectorAll('[name]');
       images.push({source: escapeHtml(data[0].value), url: escapeHtml(data[1].value)});
     }
-
+    
     return images;
   }
 
