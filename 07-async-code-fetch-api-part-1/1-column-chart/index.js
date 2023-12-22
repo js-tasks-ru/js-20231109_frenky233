@@ -103,13 +103,15 @@ export default class ColumnChart{
     async update(from, to){
         this.updateData([]);
 
-        const url = `${BACKEND_URL}/${this.url}?from=${from}&to=${to}`;
+        const url = new URL(this.url ,BACKEND_URL);
+        url.searchParams.set('from', from);
+        url.searchParams.set('to', to);
 
         const data = await fetchJson(url);
 
         this.updateData(Object.values(data));
 
-        this.subElements.header.textContent = Object.values(data).reduce((sum, cur) => sum + cur);
+        this.subElements.header.textContent = this.formatHeading(Object.values(data).reduce((sum, cur) => sum + cur).toLocaleString('en-US'));
         
         return data;
     }
